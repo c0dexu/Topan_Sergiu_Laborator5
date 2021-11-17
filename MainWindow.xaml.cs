@@ -32,5 +32,10 @@ namespace Topan_Sergiu_Lab5
             // Load data by setting the CollectionViewSource.Source property:
             // carViewSource.Source = [generic data source]
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
