@@ -12,28 +12,36 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using AutoGeistModel;
+using System.Data.Entity;
 
 namespace Topan_Sergiu_Lab5
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+    /// 
+    enum ActionState { New, Edit, Delete, Nothing };
+
     public partial class MainWindow : Window
     {
+        ActionState action = ActionState.Nothing;
+        AutoGeistEntitiesModel ctx = new AutoGeistEntitiesModel();
+        CollectionViewSource carViewSource;
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = this;
+
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
 
-            System.Windows.Data.CollectionViewSource carViewSource = ((System.Windows.Data.CollectionViewSource)(this.FindResource("carViewSource")));
-            // Load data by setting the CollectionViewSource.Source property:
-            // carViewSource.Source = [generic data source]
-            System.Windows.Data.CollectionViewSource customerViewSource = ((System.Windows.Data.CollectionViewSource)(this.FindResource("customerViewSource")));
-            // Load data by setting the CollectionViewSource.Source property:
-            // customerViewSource.Source = [generic data source]
+            carViewSource =
+((System.Windows.Data.CollectionViewSource)(this.FindResource("carViewSource")));
+            carViewSource.Source = ctx.Cars.Local;
+            ctx.Cars.Load();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
