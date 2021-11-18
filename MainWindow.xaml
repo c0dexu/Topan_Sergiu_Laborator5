@@ -10,12 +10,13 @@
     <Window.Resources>
         <CollectionViewSource x:Key="carViewSource" d:DesignSource="{d:DesignInstance {x:Type AutoGeistModel:Car}, CreateList=True}"/>
         <CollectionViewSource x:Key="customerViewSource" d:DesignSource="{d:DesignInstance {x:Type AutoGeistModel:Customer}, CreateList=True}"/>
+        <CollectionViewSource x:Key="carOrdersViewSource" Source="{Binding Orders, Source={StaticResource carViewSource}}"/>
     </Window.Resources>
-    <Grid>
+    <Grid DataContext="{StaticResource carOrdersViewSource}">
         <TabControl x:Name="tbCtrlAutoGeist" HorizontalAlignment="Left" Height="366" Margin="172,26,0,0" VerticalAlignment="Top" Width="569">
             <TabItem Header="Cars">
                 <Grid Background="#FFE5E5E5" DataContext="{StaticResource carViewSource}" Margin="34,-2,-23.8,2.4">
-                    
+
                     <Grid.RowDefinitions>
                         <RowDefinition Height="27*"/>
                         <RowDefinition Height="311*"/>
@@ -102,7 +103,36 @@
                     <Button x:Name="btnNext1" Content="Next" Grid.Column="1" HorizontalAlignment="Left" Margin="449.2,165,0,0" VerticalAlignment="Top" Width="75"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="Order"/>
+            <TabItem Header="Orders">
+                <Grid Background="#FFE5E5E5">
+                    <ComboBox x:Name="cbCars" HorizontalAlignment="Left" Margin="39,102,0,0" VerticalAlignment="Top" Width="120"/>
+                    <ComboBox x:Name="cbCustomers" HorizontalAlignment="Left" Margin="352,102,0,0" VerticalAlignment="Top" Width="120">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} {1}">
+                                            <Binding Path="FirstName"/>
+                                            <Binding Path="LastName"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                              
+                              
+                    <Label x:Name="lbCars" Content="Cars" HorizontalAlignment="Left" Margin="39,76,0,0" VerticalAlignment="Top" Width="120"/>
+                    <Label x:Name="lbCustomers" Content="Customers" HorizontalAlignment="Left" Margin="352,76,0,0" VerticalAlignment="Top" Width="120"/>
+                    <DataGrid x:Name="ordersDataGrid" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding}" Margin="39,147,230.2,89.4" RowDetailsVisibilityMode="VisibleWhenSelected">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn x:Name="carIdColumn1" Binding="{Binding CarId}" Header="Car Id" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="custIdColumn1" Binding="{Binding CustId}" Header="Cust Id" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="orderIdColumn" Binding="{Binding OrderId}" Header="Order Id" Width="SizeToHeader"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
         </TabControl>
         <GroupBox x:Name="gbOperations" Header="CRUD&#xD;&#xA;" HorizontalAlignment="Left" Height="100" Margin="18,83,0,0" VerticalAlignment="Top" Width="100">
             <StackPanel HorizontalAlignment="Left" Height="60" Margin="10,0,0,0" VerticalAlignment="Top" Width="70">
@@ -117,7 +147,7 @@
                 <Button x:Name="btnCanel" Content="Cancel" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
             </StackPanel>
         </GroupBox>
-        <ComboBox HorizontalAlignment="Left" Margin="212,104,0,0" VerticalAlignment="Top" Width="120"/>
+
 
     </Grid>
 </Window>

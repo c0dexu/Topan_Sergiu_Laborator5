@@ -38,6 +38,9 @@ namespace Topan_Sergiu_Lab5
         Binding lastnameTextBoxBinding = new Binding();
         Binding purchaseDateTextBinding = new Binding();
 
+        CollectionViewSource carOrdersViewSource;
+
+
         public MainWindow()
         {
             InitializeComponent();
@@ -55,7 +58,19 @@ namespace Topan_Sergiu_Lab5
             firstNameTextBox.SetBinding(TextBox.TextProperty, firstnameTextBoxBinding);
             lastNameTextBox.SetBinding(TextBox.TextProperty, lastnameTextBoxBinding);
             purchaseDateDatePicker.SetBinding(DatePicker.TextProperty, purchaseDateTextBinding);
-            
+
+            carOrdersViewSource =
+((System.Windows.Data.CollectionViewSource)(this.FindResource("carOrdersViewSource")));
+            carOrdersViewSource.Source = ctx.Orders.Local;
+            ctx.Orders.Load();
+            cbCars.ItemsSource = ctx.Cars.Local;
+            cbCars.DisplayMemberPath = "Make";
+            cbCars.SelectedValuePath = "CarId";
+            cbCustomers.ItemsSource = ctx.Customers.Local;
+            cbCustomers.DisplayMemberPath = "FirstName";
+            cbCustomers.SelectedValuePath = "CustId";
+
+
 
 
 
@@ -73,6 +88,80 @@ namespace Topan_Sergiu_Lab5
             gbActions.IsEnabled = true;
         }
 
+        private void SaveOrders()
+        {
+            Order order = null;
+            if (action == ActionState.New)
+            {
+                try
+                {
+                    Car car = (Car)cbCars.SelectedItem;
+                    Customer customer = (Customer)cbCustomers.SelectedItem;
+                    //instantiem Order entity
+                    order = new Order()
+                    {
+                        CarId = car.CarId,
+                        CustId = customer.CustId
+                    };
+                    //adaugam entitatea nou creata in context
+                    ctx.Orders.Add(order);
+                    ctx.SaveChanges();
+                    BindDataGrid();
+                }
+                catch (DataException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+            else if (action == ActionState.Edit)
+            {
+                dynamic selectedOrder = ordersDataGrid.SelectedItem;
+                try
+                {
+                    int curr_id = selectedOrder.OrderId;
+                    var editedOrder = ctx.Orders.FirstOrDefault(s => s.OrderId ==
+                    curr_id);
+                    if (editedOrder != null)
+                    {
+                        editedOrder.CarId =
+                       Convert.ToInt32(cbCars.SelectedValue.ToString());
+                        editedOrder.CustId =
+                       Int32.Parse(cbCustomers.SelectedValue.ToString());
+                        //salvam modificarile
+                        ctx.SaveChanges();
+                    }
+                }
+                catch (DataException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                BindDataGrid();
+                // pozitionarea pe item-ul curent
+                carOrdersViewSource.View.MoveCurrentTo(selectedOrder);
+            }
+            else if (action == ActionState.Delete)
+            {
+                try
+                {
+                    dynamic selectedOrder = ordersDataGrid.SelectedItem;
+                    int curr_id = selectedOrder.OrderId;
+
+                    var deletedOrder = ctx.Orders.FirstOrDefault(s => s.OrderId ==
+curr_id);
+                    if (deletedOrder != null)
+                    {
+                        ctx.Orders.Remove(deletedOrder);
+                        ctx.SaveChanges();
+                        MessageBox.Show("Order Deleted Successfully", "Message");
+                        BindDataGrid();
+                    }
+                }
+                catch (DataException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            }
+        }
         private void ReInitialize()
         {
             Panel panel = gbOperations.Content as Panel;
@@ -114,6 +203,10 @@ namespace Topan_Sergiu_Lab5
 ((System.Windows.Data.CollectionViewSource)(this.FindResource("carViewSource")));
             carViewSource.Source = ctx.Cars.Local;
             ctx.Cars.Load();
+
+            cbCustomers.ItemsSource = ctx.Customers.Local;
+            //cbCustomers.DisplayMemberPath = "FirstName";
+            cbCustomers.SelectedValuePath = "CustId";
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
