@@ -33,9 +33,10 @@ namespace Topan_Sergiu_Lab5
         Binding modelTextBoxBinding = new Binding();
         Binding makeTextBoxBinding = new Binding();
 
+        CollectionViewSource customerViewSource;
         Binding firstnameTextBoxBinding = new Binding();
-        Binding lastnameTextBinding = new Binding();
-        Binding purchaseDate = new Binding();
+        Binding lastnameTextBoxBinding = new Binding();
+        Binding purchaseDateTextBinding = new Binding();
 
         public MainWindow()
         {
@@ -49,10 +50,13 @@ namespace Topan_Sergiu_Lab5
             bodyStyleTextBox.SetBinding(TextBox.TextProperty, bodyStyleTextBoxBinding);
 
             firstnameTextBoxBinding.Path = new PropertyPath("FirstName");
-            lastnameTextBinding.Path = new PropertyPath("LastName");
+            lastnameTextBoxBinding.Path = new PropertyPath("LastName");
+            purchaseDateTextBinding.Path = new PropertyPath("PurchaseDate");
             firstNameTextBox.SetBinding(TextBox.TextProperty, firstnameTextBoxBinding);
-            lastNameTextBox.SetBinding(TextBox.TextProperty, lastnameTextBinding);
+            lastNameTextBox.SetBinding(TextBox.TextProperty, lastnameTextBoxBinding);
+            purchaseDateDatePicker.SetBinding(DatePicker.TextProperty, purchaseDateTextBinding);
             
+
 
 
         }
@@ -231,7 +235,77 @@ namespace Topan_Sergiu_Lab5
                bodyStyleTextBoxBinding);
             }
         }
-        // slide 5 - 12
+
+        // save customers
+
+        private void SaveInventory()
+        {
+            Customer customer = null;
+            if (action == ActionState.New)
+            {
+                try
+                {
+                    customer = new Customer()
+                    {
+                        FirstName = firstNameTextBox.Text.Trim(),
+                        LastName = lastNameTextBox.Text.Trim(),
+                       
+                    };
+                    ctx.Customers.Add(customer);
+
+                    customerViewSource.View.Refresh();
+                    customerViewSource.View.MoveCurrentTo(customer);
+                    ctx.SaveChanges();
+                }
+                // using System.Data;
+                catch (DataException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                firstNameTextBox.SetBinding(TextBox.TextProperty, firstnameTextBoxBinding);
+                lastNameTextBox.SetBinding(TextBox.TextProperty, lastnameTextBoxBinding);
+                purchaseDateDatePicker.SetBinding(DatePicker.TextProperty, purchaseDateTextBinding);
+            }
+            else if (action == ActionState.Edit)
+            {
+                try
+                {
+                    customer = (Customer)carDataGrid.SelectedItem;
+                    customer.FirstName = firstNameTextBox.Text.Trim();
+                    customer.LastName = lastNameTextBox.Text.Trim();
+                    customer.PurchaseDate = DateTime.Today;
+
+                    ctx.SaveChanges();
+                }
+                catch (DataException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                customerViewSource.View.Refresh();
+                customerViewSource.View.MoveCurrentTo(customer);
+                firstNameTextBox.SetBinding(TextBox.TextProperty, firstnameTextBoxBinding);
+                lastNameTextBox.SetBinding(TextBox.TextProperty, lastnameTextBoxBinding);
+                purchaseDateDatePicker.SetBinding(DatePicker.TextProperty, purchaseDateTextBinding);
+            }
+            else if (action == ActionState.Delete)
+            {
+                try
+                {
+                    customer = (Customer)carDataGrid.SelectedItem;
+                    ctx.Customers.Remove(customer);
+                    ctx.SaveChanges();
+                }
+                catch (DataException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                customerViewSource.View.Refresh();
+                customerViewSource.View.MoveCurrentTo(customer);
+                firstNameTextBox.SetBinding(TextBox.TextProperty, firstnameTextBoxBinding);
+                lastNameTextBox.SetBinding(TextBox.TextProperty, lastnameTextBoxBinding);
+                purchaseDateDatePicker.SetBinding(DatePicker.TextProperty, purchaseDateTextBinding);
+            }
+        }
 
 
 
