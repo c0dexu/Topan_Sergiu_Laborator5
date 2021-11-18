@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using AutoGeistModel;
 using System.Data.Entity;
+using System.Data;
 
 namespace Topan_Sergiu_Lab5
 {
@@ -28,10 +29,21 @@ namespace Topan_Sergiu_Lab5
         ActionState action = ActionState.Nothing;
         AutoGeistEntitiesModel ctx = new AutoGeistEntitiesModel();
         CollectionViewSource carViewSource;
+        Binding bodyStyleTextBoxBinding = new Binding();
+        Binding modelTextBoxBinding = new Binding();
+        Binding makeTextBoxBinding = new Binding();
+
         public MainWindow()
         {
             InitializeComponent();
             DataContext = this;
+            modelTextBoxBinding.Path = new PropertyPath("Model");
+            makeTextBoxBinding.Path = new PropertyPath("Make");
+            bodyStyleTextBoxBinding.Path = new PropertyPath("BodyStyle");
+            modelTextBox.SetBinding(TextBox.TextProperty, modelTextBoxBinding);
+            makeTextBox.SetBinding(TextBox.TextProperty, makeTextBoxBinding);
+            bodyStyleTextBox.SetBinding(TextBox.TextProperty, bodyStyleTextBoxBinding);
+
 
         }
 
@@ -48,5 +60,124 @@ namespace Topan_Sergiu_Lab5
         {
 
         }
+
+        private void btnNew_Click(object sender, RoutedEventArgs e)
+        {
+            action = ActionState.New;
+            TabItem ti = tbCtrlAutoGeist.SelectedItem as TabItem;
+            switch (ti.Header)
+            {
+                case "Cars":
+                    BindingOperations.ClearBinding(bodyStyleTextBox, TextBox.TextProperty);
+                    BindingOperations.ClearBinding(makeTextBox, TextBox.TextProperty);
+                    BindingOperations.ClearBinding(modelTextBox, TextBox.TextProperty);
+                    bodyStyleTextBox.Text = "";
+                    makeTextBox.Text = "";
+                    modelTextBox.Text = "";
+                    Keyboard.Focus(bodyStyleTextBox);
+                    break;
+                case "Customers":
+                    BindingOperations.ClearBinding(firstNameTextBox, TextBox.TextProperty);
+                    BindingOperations.ClearBinding(lastNameTextBox, TextBox.TextProperty);
+                    firstNameTextBox.Text = "";
+                    lastNameTextBox.Text = "";
+                    Keyboard.Focus(firstNameTextBox);
+                    break;
+                case "Orders":
+                    break;
+            }
+
+        }
+
+        private void btnEdit_Click(object sender, RoutedEventArgs e)
+        {
+            action = ActionState.Edit;
+        }
+        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        {
+            action = ActionState.Delete;
+        }
+
+        private void btnNext_Click(object sender, RoutedEventArgs e)
+        {
+            carViewSource.View.MoveCurrentToNext();
+        }
+        private void btnPrevious_Click(object sender, RoutedEventArgs e)
+        {
+            carViewSource.View.MoveCurrentToPrevious();
+        }
+
+        private void SaveCars()
+        {
+            Car car = null;
+            if (action == ActionState.New)
+            {
+                try
+                {
+                    car = new Car()
+                    {
+                        Make = makeTextBox.Text.Trim(),
+                        Model = modelTextBox.Text.Trim(),
+                        BodyStyle = bodyStyleTextBox.Text.Trim(),
+                    };
+                    ctx.Cars.Add(car);
+                    carViewSource.View.Refresh();
+                    carViewSource.View.MoveCurrentTo(car);
+                    ctx.SaveChanges();
+                }
+                // using System.Data;
+                catch (DataException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                makeTextBox.SetBinding(TextBox.TextProperty, makeTextBoxBinding);
+                modelTextBox.SetBinding(TextBox.TextProperty, modelTextBoxBinding);
+                bodyStyleTextBox.SetBinding(TextBox.TextProperty,
+               bodyStyleTextBoxBinding);
+            }
+            else if (action == ActionState.Edit)
+            {
+                try
+                {
+                    car = (Car)carDataGrid.SelectedItem;
+                    car.Make = makeTextBox.Text.Trim();
+                    car.Model = modelTextBox.Text.Trim();
+                    car.BodyStyle = bodyStyleTextBox.Text.Trim();
+                    ctx.SaveChanges();
+                }
+                catch (DataException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                carViewSource.View.Refresh();
+                carViewSource.View.MoveCurrentTo(car);
+                makeTextBox.SetBinding(TextBox.TextProperty, makeTextBoxBinding);
+                modelTextBox.SetBinding(TextBox.TextProperty, modelTextBoxBinding);
+                bodyStyleTextBox.SetBinding(TextBox.TextProperty,
+               bodyStyleTextBoxBinding);
+            }
+            else if (action == ActionState.Delete)
+            {
+                try
+                {
+                    car = (Car)carDataGrid.SelectedItem;
+                    ctx.Cars.Remove(car);
+                    ctx.SaveChanges();
+                }
+                catch (DataException ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+                carViewSource.View.Refresh();
+                makeTextBox.SetBinding(TextBox.TextProperty, makeTextBoxBinding);
+                modelTextBox.SetBinding(TextBox.TextProperty, modelTextBoxBinding);
+                bodyStyleTextBox.SetBinding(TextBox.TextProperty,
+               bodyStyleTextBoxBinding);
+            }
+        }
+        // slide 5 - 12
+
+
+
     }
 }

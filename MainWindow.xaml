@@ -12,9 +12,9 @@
         <CollectionViewSource x:Key="customerViewSource" d:DesignSource="{d:DesignInstance {x:Type AutoGeistModel:Customer}, CreateList=True}"/>
     </Window.Resources>
     <Grid>
-        <TabControl HorizontalAlignment="Left" Height="366" Margin="172,26,0,0" VerticalAlignment="Top" Width="569">
+        <TabControl x:Name="tbCtrlAutoGeist" HorizontalAlignment="Left" Height="366" Margin="172,26,0,0" VerticalAlignment="Top" Width="569">
             <TabItem Header="Cars">
-                <Grid Background="#FFE5E5E5" DataContext="{StaticResource carViewSource}" Margin="10,0,0.2,0.4">
+                <Grid Background="#FFE5E5E5" DataContext="{StaticResource carViewSource}" Margin="34,-2,-23.8,2.4">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="27*"/>
                         <RowDefinition Height="311*"/>
@@ -31,7 +31,7 @@
                             <DataGridTextColumn x:Name="modelColumn" Binding="{Binding Model}" Header="Model" Width="SizeToHeader"/>
                         </DataGrid.Columns>
                     </DataGrid>
-                    <Grid x:Name="grid1" HorizontalAlignment="Left" Margin="40.6,160.8,0,0" VerticalAlignment="Top" Grid.Column="1" Grid.Row="1">
+                    <Grid x:Name="grid1" HorizontalAlignment="Left" Margin="259.6,143.2,0,0" VerticalAlignment="Top" Grid.Column="1" Grid.Row="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="Auto"/>
