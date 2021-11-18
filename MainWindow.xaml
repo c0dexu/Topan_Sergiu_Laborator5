@@ -101,7 +101,7 @@
             </TabItem>
             <TabItem Header="Order"/>
         </TabControl>
-        <GroupBox x:Name="gbOperations" Header="CRUD&#xD;&#xA;" HorizontalAlignment="Left" Height="100" Margin="36,83,0,0" VerticalAlignment="Top" Width="100">
+        <GroupBox x:Name="gbOperations" Header="CRUD&#xD;&#xA;" HorizontalAlignment="Left" Height="100" Margin="36,83,0,0" VerticalAlignment="Top" Width="100" Button.Click="gbOperations_Click" >
             <StackPanel HorizontalAlignment="Left" Height="60" Margin="10,0,0,0" VerticalAlignment="Top" Width="70">
                 <Button x:Name="btnNew" Content="New" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
                 <Button x:Name="btnEdit" Content="Edit" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="Button_Click"/>

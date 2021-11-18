@@ -33,6 +33,10 @@ namespace Topan_Sergiu_Lab5
         Binding modelTextBoxBinding = new Binding();
         Binding makeTextBoxBinding = new Binding();
 
+        Binding firstnameTextBoxBinding = new Binding();
+        Binding lastnameTextBinding = new Binding();
+        Binding purchaseDate = new Binding();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -44,8 +48,60 @@ namespace Topan_Sergiu_Lab5
             makeTextBox.SetBinding(TextBox.TextProperty, makeTextBoxBinding);
             bodyStyleTextBox.SetBinding(TextBox.TextProperty, bodyStyleTextBoxBinding);
 
+            firstnameTextBoxBinding.Path = new PropertyPath("FirstName");
+            lastnameTextBinding.Path = new PropertyPath("LastName");
+            firstNameTextBox.SetBinding(TextBox.TextProperty, firstnameTextBoxBinding);
+            lastNameTextBox.SetBinding(TextBox.TextProperty, lastnameTextBinding);
+            
+
 
         }
+
+        private void gbOperations_Click(object sender, RoutedEventArgs e)
+        {
+            Button SelectedButton = (Button)e.OriginalSource;
+            Panel panel = (Panel)SelectedButton.Parent;
+            foreach (Button B in panel.Children.OfType<Button>())
+            {
+                if (B != SelectedButton)
+                    B.IsEnabled = false;
+            }
+            gbActions.IsEnabled = true;
+        }
+
+        private void ReInitialize()
+        {
+            Panel panel = gbOperations.Content as Panel;
+            foreach (Button B in panel.Children.OfType<Button>())
+            {
+                B.IsEnabled = true;
+            }
+            gbActions.IsEnabled = false;
+        }
+
+        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            ReInitialize();
+        }
+
+        private void btnSave_Click(object sender, RoutedEventArgs e)
+        {
+
+            TabItem ti = tbCtrlAutoGeist.SelectedItem as TabItem;
+            switch (ti.Header)
+            {
+                case "Cars":
+                    SaveCars();
+                    break;
+                case "Customers":
+                    SaveInventory();
+                    break;
+                case "Orders":
+                    break;
+            }
+            ReInitialize();
+        }
+
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
