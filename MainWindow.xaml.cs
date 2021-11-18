@@ -204,10 +204,43 @@ curr_id);
             carViewSource.Source = ctx.Cars.Local;
             ctx.Cars.Load();
 
+            carOrdersViewSource =
+  ((System.Windows.Data.CollectionViewSource)(this.FindResource("carOrdersViewSource")));
+
+            customerViewSource =
+((System.Windows.Data.CollectionViewSource)(this.FindResource("customerViewSource")));
+
+            ctx.Customers.Load();
+            // carOrdersViewSource.Source = ctx.Orders.Local;
+            ctx.Orders.Load();
+            cbCars.ItemsSource = ctx.Cars.Local;
+          //  cbCars.DisplayMemberPath = "Make";
+            cbCars.SelectedValuePath = "CarId";
             cbCustomers.ItemsSource = ctx.Customers.Local;
-            //cbCustomers.DisplayMemberPath = "FirstName";
+           // cbCustomers.DisplayMemberPath = "FirstName";
             cbCustomers.SelectedValuePath = "CustId";
+
+
         }
+
+        private void BindDataGrid()
+        {
+            var queryOrder = from ord in ctx.Orders
+                             join cust in ctx.Customers on ord.CustId equals cust.CustId
+                             join car in ctx.Cars on ord.CarId equals car.CarId
+                             select new
+                             {
+                                 ord.OrderId,
+                                 ord.CarId,
+                                 ord.CustId,
+                                 cust.FirstName,
+                                 cust.LastName,
+                                 car.Make,
+                                 car.Model
+                             };
+            carOrdersViewSource.Source = queryOrder.ToList();
+        }
+
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {

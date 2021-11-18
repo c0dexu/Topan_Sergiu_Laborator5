@@ -105,8 +105,23 @@
             </TabItem>
             <TabItem Header="Orders">
                 <Grid Background="#FFE5E5E5">
-                    <ComboBox x:Name="cbCars" HorizontalAlignment="Left" Margin="39,102,0,0" VerticalAlignment="Top" Width="120"/>
-                    <ComboBox x:Name="cbCustomers" HorizontalAlignment="Left" Margin="352,102,0,0" VerticalAlignment="Top" Width="120">
+                    <ComboBox x:Name="cbCars" HorizontalAlignment="Left" Margin="39,102,0,0" VerticalAlignment="Top" Width="120" SelectedValue="{Binding
+ElementName=ordersDataGrid,Path=SelectedItem.CarId,Mode=OneWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock>
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} - {1}">
+                                            <Binding Path="Make"/>
+                                            <Binding Path="Model"/>
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <ComboBox x:Name="cbCustomers" HorizontalAlignment="Left" Margin="352,102,0,0" VerticalAlignment="Top" Width="120" SelectedValue="{Binding
+ElementName=ordersDataGrid,Path=SelectedItem.CustId,Mode=OneWay}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock>
@@ -126,9 +141,14 @@
                     <Label x:Name="lbCustomers" Content="Customers" HorizontalAlignment="Left" Margin="352,76,0,0" VerticalAlignment="Top" Width="120"/>
                     <DataGrid x:Name="ordersDataGrid" AutoGenerateColumns="False" EnableRowVirtualization="True" ItemsSource="{Binding}" Margin="39,147,230.2,89.4" RowDetailsVisibilityMode="VisibleWhenSelected">
                         <DataGrid.Columns>
-                            <DataGridTextColumn x:Name="carIdColumn1" Binding="{Binding CarId}" Header="Car Id" Width="SizeToHeader"/>
-                            <DataGridTextColumn x:Name="custIdColumn1" Binding="{Binding CustId}" Header="Cust Id" Width="SizeToHeader"/>
-                            <DataGridTextColumn x:Name="orderIdColumn" Binding="{Binding OrderId}" Header="Order Id" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="FirstNameColumn" Binding="{Binding FirstName}"
+Header="First Name" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="LastNameColumn" Binding="{Binding LastName}" Header="Last 
+Name" Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="MakeColumn" Binding="{Binding Make}" Header="Make"
+Width="SizeToHeader"/>
+                            <DataGridTextColumn x:Name="ModelColumn" Binding="{Binding Model}" Header="Model"
+Width="SizeToHeader"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>
