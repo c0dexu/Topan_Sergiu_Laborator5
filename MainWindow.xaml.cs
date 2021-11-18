@@ -307,7 +307,9 @@ namespace Topan_Sergiu_Lab5
             }
         }
 
+        private void tbCtrlAutoGeist_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
 
-
+        }
     }
 }
