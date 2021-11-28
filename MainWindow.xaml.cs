@@ -322,6 +322,7 @@ curr_id);
                     makeTextBox.Text = "";
                     modelTextBox.Text = "";
                     Keyboard.Focus(bodyStyleTextBox);
+                    SetValidationBinding();
                     break;
                 case "Customers":
                     BindingOperations.ClearBinding(firstNameTextBox, TextBox.TextProperty);
