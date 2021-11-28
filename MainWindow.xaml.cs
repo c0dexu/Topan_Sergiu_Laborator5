@@ -235,6 +235,8 @@ curr_id);
             //string required
             firstNameValidationBinding.ValidationRules.Add(new StringNotEmpty());
             firstNameTextBox.SetBinding(TextBox.TextProperty, firstNameValidationBinding);
+
+
             Binding lastNameValidationBinding = new Binding();
             lastNameValidationBinding.Source = customerViewSource;
             lastNameValidationBinding.Path = new PropertyPath("LastName");
@@ -245,8 +247,42 @@ curr_id);
             //string min length validator
             lastNameValidationBinding.ValidationRules.Add(new StringMinLength());
             lastNameTextBox.SetBinding(TextBox.TextProperty, lastNameValidationBinding);
- 
-}
+
+            // Car - body style
+            Binding bodystyleValidationBinding = new Binding();
+            bodystyleValidationBinding.Source = carViewSource;
+            bodystyleValidationBinding.Path = new PropertyPath("BodyStyle");
+            bodystyleValidationBinding.NotifyOnValidationError = true;
+            bodystyleValidationBinding.Mode = BindingMode.TwoWay;
+            bodystyleValidationBinding.UpdateSourceTrigger =
+           UpdateSourceTrigger.PropertyChanged;
+            bodystyleValidationBinding.ValidationRules.Add(new StringMinLength());
+            bodyStyleTextBox.SetBinding(TextBox.TextProperty, lastNameValidationBinding);
+
+            // Car - Make
+            Binding makeValidationBinding = new Binding();
+            makeValidationBinding.Source = carViewSource;
+            makeValidationBinding.Path = new PropertyPath("Make");
+            makeValidationBinding.NotifyOnValidationError = true;
+            makeValidationBinding.Mode = BindingMode.TwoWay;
+            makeValidationBinding.UpdateSourceTrigger =
+           UpdateSourceTrigger.PropertyChanged;
+            makeValidationBinding.ValidationRules.Add(new StringMinLength());
+            makeTextBox.SetBinding(TextBox.TextProperty, lastNameValidationBinding);
+
+            // Car - Model
+            Binding modelValidationBinding = new Binding();
+            modelValidationBinding.Source = carViewSource;
+            modelValidationBinding.Path = new PropertyPath("Model");
+            modelValidationBinding.NotifyOnValidationError = true;
+            modelValidationBinding.Mode = BindingMode.TwoWay;
+            modelValidationBinding.UpdateSourceTrigger =
+           UpdateSourceTrigger.PropertyChanged;
+            modelValidationBinding.ValidationRules.Add(new StringMinLength());
+            modelTextBox.SetBinding(TextBox.TextProperty, lastNameValidationBinding);
+
+
+        }
 
         private void BindDataGrid()
         {
